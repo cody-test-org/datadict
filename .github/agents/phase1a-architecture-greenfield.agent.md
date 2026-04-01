@@ -38,6 +38,19 @@ artifacts that Phase 2 (Code Generation) can implement directly.
 
 ---
 
+## Pre-Phase: Load Instincts & Context
+
+Before beginning work, load your learned patterns:
+
+1. **Read your instincts** — Check `.github/instincts/phase1a-architecture-greenfield.instincts.md` for learned patterns. Apply all listed instincts to your work in this phase.
+2. **Read shared instincts** — Check `.github/instincts/shared.instincts.md` for organizational patterns that apply across all phases.
+3. **Read past feedback** — Check `reports/feedback/` for any feedback files from previous runs of this phase. Pay special attention to corrections and anti-patterns.
+4. **Note your starting assumptions** — Before producing output, briefly note what decisions you're making and why. This enables post-phase self-assessment.
+
+> If no instinct files or feedback exist yet, proceed normally — instincts will accumulate over time.
+
+---
+
 ## Greenfield Design Philosophy
 
 You have **full freedom** to design the optimal architecture. Use that freedom wisely:
@@ -309,6 +322,28 @@ After generating all architecture artifacts, pause and request human approval of
 3. The API contract — especially resource naming and endpoint design.
 
 Do **not** proceed to Phase 2 until the human has reviewed and approved the ADR.
+
+---
+
+## Post-Phase: Self-Assessment & Learning
+
+After completing your work, perform a brief self-assessment:
+
+1. **Review your output** against your instincts — did you follow all learned patterns?
+2. **Identify decisions you made** that a reviewer might question or correct — especially schema design decisions, API convention choices, and technology selections.
+3. **Note any patterns you discovered** that could become instincts for future runs.
+4. **Write a self-assessment** to `reports/feedback/phase-1A-self-assessment.md`:
+
+| Question | Your Answer |
+|----------|-------------|
+| Did I follow all instincts? | Yes / No (list any missed) |
+| What decisions might be controversial? | [list] |
+| What patterns did I discover? | [list] |
+| What would I do differently? | [list] |
+| Proposed new instincts | [list actionable instincts] |
+
+5. **Suggest instinct updates** — If you discovered patterns worth codifying, propose them for the instinct manager:
+   > Invoke `@instinct-manager` to review and add approved instincts after checkpoint feedback.
 
 ---
 

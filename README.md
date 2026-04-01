@@ -73,6 +73,9 @@ graph LR
 | **4** | `@phase4-review` | Reviews for security, Spring anti-patterns, performance | `Code-Review.md` |
 | **5** | `@phase5-documentation` | Generates README, API docs, Javadoc, user guides | `README.md`, `docs/` |
 | **—** | `@get-status` | Shows pipeline progress (use anytime) | Console output |
+| **—** | `@checkpoint-feedback` | Captures structured reviewer feedback at checkpoints | `reports/feedback/` |
+| **—** | `@instinct-manager` | Manages instinct store, extracts learnings from feedback | `.github/instincts/` |
+| **—** | `@skill-evolver` | Proposes SKILL.md updates from accumulated instincts | Updated `SKILL.md` |
 | **—** | `@sdlc-orchestrator` | Manages full pipeline, handoffs, checkpoints | `Report-Status.md` |
 
 ---
@@ -91,7 +94,12 @@ datadict/
 │   │   ├── phase3-testing.agent.md          # Test suite generation
 │   │   ├── phase4-review.agent.md           # Code review
 │   │   ├── phase5-documentation.agent.md    # Doc generation
-│   │   └── get-status.agent.md              # Pipeline status utility
+│   │   ├── get-status.agent.md              # Pipeline status utility
+│   │   ├── checkpoint-feedback.agent.md     # Feedback capture at checkpoints
+│   │   ├── instinct-manager.agent.md        # Instinct store management
+│   │   └── skill-evolver.agent.md           # Skill evolution from instincts
+│   │
+│   ├── instincts/                       # 🧠 Learned patterns (per-project)
 │   │
 │   ├── skills/                          # 📚 Domain knowledge (auto-loaded by agents)
 │   │   ├── openapi-parsing/SKILL.md         # OpenAPI spec parsing patterns
@@ -112,7 +120,8 @@ datadict/
 │   ├── Database-Schema.md                   # PostgreSQL DDL
 │   ├── API-Contract.md                      # OpenAPI 3.1 spec
 │   ├── Test-Plan.md                         # Test case inventory
-│   └── Code-Review.md                       # Review findings
+│   ├── Code-Review.md                       # Review findings
+│   └── feedback/                            # Structured checkpoint feedback
 │
 ├── handoffs/                            # 🤝 Phase transition documents
 │   ├── HANDOFF-TEMPLATE.md                  # Reusable template
@@ -198,6 +207,57 @@ If you already have a PRD or architecture docs, invoke any phase directly:
 | **Code Review** | `@phase4-review` | Reviews code for bugs & anti-patterns | `Code-Review.md` |
 | **Documentation** | `@phase5-documentation` | Generates README, API docs, guides | `README.md`, `docs/` |
 | **Status** | `@get-status` | Shows pipeline progress | Console output |
+| **Checkpoint Feedback** | `@checkpoint-feedback` | Captures structured reviewer feedback | `reports/feedback/` |
+| **Instinct Manager** | `@instinct-manager` | Manages instinct store, extracts learnings | `.github/instincts/` |
+| **Skill Evolver** | `@skill-evolver` | Proposes SKILL.md updates from instincts | Updated `SKILL.md` files |
+
+---
+
+## 🧠 Learning Loop
+
+The framework gets smarter with every pipeline run through a continuous learning loop that captures human feedback, extracts reusable patterns ("instincts"), and evolves agent skills over time.
+
+```mermaid
+graph LR
+    A["Phase Agent\nruns"] --> B["Post-Phase\nSelf-Assessment"]
+    B --> C["Checkpoint\nHuman Review"]
+    C --> D["@checkpoint-feedback\nCapture Feedback"]
+    D --> E["@instinct-manager\nExtract Instincts"]
+    E --> F[".github/instincts/\nInstinct Store"]
+    F --> G{"5+ related\ninstincts?"}
+    G -- yes --> H["@skill-evolver\nPropose Skill Update"]
+    H --> I["SKILL.md\nEvolved"]
+    G -- no --> F
+    F -.-> A
+    I -.-> A
+
+    class A,B phase
+    class C,D feedback
+    class E,F,H learning
+    class I skill
+
+    classDef phase fill:#2563eb,stroke:#1e40af,color:#fff,rx:8,ry:8
+    classDef feedback fill:#f59e0b,stroke:#d97706,color:#000,rx:8,ry:8
+    classDef learning fill:#8b5cf6,stroke:#6d28d9,color:#fff,rx:8,ry:8
+    classDef skill fill:#10b981,stroke:#059669,color:#fff,rx:8,ry:8
+```
+
+### How Instincts Work
+
+**Instincts** are small, reusable patterns extracted from checkpoint feedback and agent self-assessments. They live in `.github/instincts/` and are automatically loaded by agents at the start of each phase.
+
+- **Capture**: At every human checkpoint, `@checkpoint-feedback` records structured feedback (what worked, what didn't, corrections made)
+- **Extract**: `@instinct-manager` distills feedback into instincts — concise, actionable patterns tagged by phase and domain
+- **Evolve**: When 5+ related instincts accumulate for a skill area, `@skill-evolver` proposes updates to the corresponding `SKILL.md`
+- **Apply**: On the next run, agents read instincts before starting work, applying learned patterns alongside their base skills
+
+### Cross-Project Learning
+
+Instincts are stored per-project in `.github/instincts/`. To carry learnings forward:
+
+1. Copy `.github/instincts/` from a completed project into a new project's `.github/` directory
+2. Agents will automatically pick up the instincts on the next run
+3. Prune irrelevant instincts with `@instinct-manager prune instincts for [new project context]`
 
 ---
 
