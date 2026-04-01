@@ -367,5 +367,8 @@ Before finalizing output, verify:
 
 ## Next Steps
 
-After PRD is complete, hand off to `@phase1-architecture` for system design.
+After PRD is complete, hand off to the appropriate Phase 1 agent based on the project type:
+- **Greenfield:** → `@phase1a-architecture-greenfield`
+- **Brownfield:** → `@phase1b-architecture-brownfield`
+
 Update `reports/Report-Status.md` with Phase 0 completion status.

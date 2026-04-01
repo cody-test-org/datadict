@@ -62,9 +62,9 @@ within individual phases where noted:
 ┌─────────────────────────────────────────────────────────────────┐
 │                     SDLC ORCHESTRATOR                          │
 │                                                                 │
-│  Phase 0 ──► Phase 1 ──► Phase 2 ──► Phase 3 ──► Phase 4 ──►  │
-│  PRD         Arch        CodeGen     Testing     Review         │
-│                 🔒                                   🔒          │
+│  Phase 0 ──► Phase 1A or 1B ──► Phase 2 ──► Phase 3 ──► Phase 4  │
+│  PRD         Arch (routed)     CodeGen     Testing     Review    │
+│                    🔒                                    🔒       │
 │                                                                 │
 │  ──► Phase 5 ──► ✅ Done                                       │
 │      Docs                                                       │
@@ -87,17 +87,32 @@ stories, acceptance criteria, and non-functional requirements.
 
 **Exit Criteria:** PRD completeness score ≥ 3/5, zero blocking open questions.
 
-### Phase 1 — Architecture & Design `@phase1-architecture`
+### Phase 1A — Greenfield Architecture `@phase1a-architecture-greenfield`
 
 **Goal:** Produce system architecture, data models, API contracts, and Architecture
-Decision Records (ADRs) based on the PRD.
+Decision Records (ADRs) for new (greenfield) projects based on the PRD.
 
 **Inputs:** `reports/PRD.md`, `reports/User-Stories.md`
 **Outputs:**
-- `reports/Architecture-Design.md` — System architecture document
-- `reports/ADR-*.md` — Architecture Decision Records
-- `reports/Data-Model.md` — Entity relationship diagrams, schema design
+- `reports/Architecture-Decision-Record.md` — Architecture Decision Record
+- `reports/Database-Schema.md` — Entity relationship diagrams, schema design
 - `reports/API-Contract.md` — OpenAPI spec or endpoint inventory
+
+**Exit Criteria:** ADR reviewed and approved (🔒 **human checkpoint**).
+
+> Only one of Phase 1A or 1B runs per project — the orchestrator routes based on Phase 0 output.
+
+### Phase 1B — Brownfield Architecture `@phase1b-architecture-brownfield`
+
+**Goal:** Produce system architecture, migration plans, API extension contracts, and
+Architecture Decision Records (ADRs) for existing (brownfield) systems based on the PRD
+and existing system context.
+
+**Inputs:** `reports/PRD.md`, `reports/User-Stories.md`, existing codebase
+**Outputs:**
+- `reports/Architecture-Decision-Record.md` — Architecture Decision Record
+- `reports/Database-Schema-Migration.md` — Migration plan for existing schema
+- `reports/API-Extension-Contract.md` — Extensions to existing API contract
 
 **Exit Criteria:** ADR reviewed and approved (🔒 **human checkpoint**).
 
@@ -270,7 +285,7 @@ Create it at pipeline start; update it after every phase transition.
 | Status | ✅ Complete |
 | Started | [timestamp] |
 | Completed | [timestamp] |
-| Agent | `@phase1-architecture` |
+| Agent | `@phase1a-architecture-greenfield` or `@phase1b-architecture-brownfield` |
 | Human Approval | ✅ Approved [timestamp] |
 | Notes | [summary] |
 
@@ -315,6 +330,7 @@ When invoked for a **new project**, follow this sequence:
    - Create directories — Ensure `reports/` and `handoffs/` directories exist.
    - Gather context — Read any existing files in the repository.
    - Start Phase 0 — Delegate to `@phase0-prd-discovery` with all gathered context.
+   - **Phase 0→1 routing:** After Phase 0 completes, delegate to `@phase1a-architecture-greenfield`.
 
 3. **If brownfield:**
    - Initialize status tracking as above, but note `Project Type: Brownfield` in the status report.
@@ -327,7 +343,8 @@ When invoked for a **new project**, follow this sequence:
      before standard requirements analysis. The existing system is: [description]
      ```
    - Ensure Phase 0 output includes a fully populated Section 8a in the PRD.
-   - Ensure Phase 1 receives the brownfield context and applies integration constraints.
+   - **Phase 0→1 routing:** After Phase 0 completes, delegate to `@phase1b-architecture-brownfield`.
+     This agent applies integration constraints and reads the existing codebase.
    - Ensure Phase 2 reads the existing codebase before generating code.
 
 4. **Monitor and iterate** — After each phase completes, validate exit criteria, create
@@ -357,7 +374,8 @@ Use these patterns when delegating to phase agents:
 
 ```
 @phase0-prd-discovery Generate PRD for: [project description]
-@phase1-architecture Design architecture based on reports/PRD.md
+@phase1a-architecture-greenfield Design architecture based on reports/PRD.md
+@phase1b-architecture-brownfield Design architecture based on reports/PRD.md and existing system
 @phase2-codegen Generate Spring Boot application from architecture docs
 @phase3-testing Generate test suites for src/main/java/**
 @phase4-review Review code quality and security for the codebase

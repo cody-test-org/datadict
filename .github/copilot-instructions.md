@@ -28,7 +28,8 @@ with human checkpoints at critical gates.
 |-------|-------|---------|
 | `@sdlc-orchestrator` | All | Master pipeline manager — coordinates phase execution |
 | `@phase0-prd-discovery` | 0 | Requirements gathering → Product Requirements Document |
-| `@phase1-architecture` | 1 | Architecture decisions, DB schema, API contract design |
+| `@phase1a-architecture-greenfield` | 1A | Greenfield architecture — new system design, DB schema, API contracts |
+| `@phase1b-architecture-brownfield` | 1B | Brownfield architecture — integration design, schema migration, API extensions |
 | `@phase2-codegen` | 2 | Java/Spring Boot code generation from architecture |
 | `@phase3-testing` | 3 | Test suite generation (unit, integration, E2E) |
 | `@phase4-review` | 4 | Automated code review and quality analysis |
@@ -38,10 +39,11 @@ with human checkpoints at critical gates.
 ## Workflow
 
 1. Start with `@sdlc-orchestrator` for full pipeline or `@phase0-prd-discovery` for phase-by-phase
-2. Each agent produces artifacts in the `reports/` directory
-3. Handoff documents are created in `handoffs/` at phase boundaries
-4. **Mandatory human checkpoint** at Phase 1→2 (Architecture); **recommended Final Review** after Phase 5
-5. Use `@get-status` at any time to check pipeline progress and next steps
+2. Phase 0 determines project type (greenfield/brownfield) which routes to the appropriate Phase 1 agent
+3. Each agent produces artifacts in the `reports/` directory
+4. Handoff documents are created in `handoffs/` at phase boundaries
+5. **Mandatory human checkpoint** at Phase 1→2 (Architecture); **recommended Final Review** after Phase 5
+6. Use `@get-status` at any time to check pipeline progress and next steps
 
 ## Coding Standards
 

@@ -8,15 +8,15 @@
 ## Checkpoint Overview
 
 ```
-Phase 0 ──→ [R1] ──→ Phase 1 ──→ [CP1] ──→ Phase 2 ──→ Phase 3 ──→ Phase 4 ──→ [R2] ──→ Phase 5 ──→ [FR] ──→ ✅ Done
+Phase 0 ──→ [R1] ──→ Phase 1A/1B ──→ [CP1] ──→ Phase 2 ──→ Phase 3 ──→ Phase 4 ──→ [R2] ──→ Phase 5 ──→ [FR] ──→ ✅ Done
              ▲                      ▲                                              ▲                      ▲
          Recommended            MANDATORY                                     Recommended           Recommended
 ```
 
 | Checkpoint | Location | Type | Blocking |
 |------------|----------|------|----------|
-| R1 | Phase 0 → Phase 1 | Recommended | No (skippable) |
-| CP1 | Phase 1 → Phase 2 | Mandatory | Yes |
+| R1 | Phase 0 → Phase 1A/1B | Recommended | No (skippable) |
+| CP1 | Phase 1A/1B → Phase 2 | Mandatory | Yes |
 | R2 | Phase 4 → Phase 5 | Recommended | Conditional |
 | FR | After Phase 5 | Recommended | No (skippable) |
 
@@ -24,9 +24,9 @@ Phase 0 ──→ [R1] ──→ Phase 1 ──→ [CP1] ──→ Phase 2 ─�
 
 ## Mandatory Checkpoints
 
-### Checkpoint 1 (CP1): Architecture Review — Phase 1 → Phase 2
+### Checkpoint 1 (CP1): Architecture Review — Phase 1A/1B → Phase 2
 
-- **When**: After the Architecture agent produces the ADR, database schema, and API contract
+- **When**: After the Architecture agent (`@phase1a-architecture-greenfield` or `@phase1b-architecture-brownfield`) produces the ADR, database schema, and API contract
 - **What to Review**:
   - ADR trade-offs and technology choices
   - PostgreSQL schema design (tables, indexes, FTS configuration)
@@ -39,7 +39,7 @@ Phase 0 ──→ [R1] ──→ Phase 1 ──→ [CP1] ──→ Phase 2 ─�
 - **Approval Method**: Review artifacts, then invoke `@phase2-codegen` to signal approval
 - **Blocking**: **Yes** — code generation cannot proceed without architecture approval
 - **Estimated Review Time**: 30–60 minutes
-- **Rejection Protocol**: Add comments to the handoff document and re-invoke `@phase1-architecture` with feedback
+- **Rejection Protocol**: Add comments to the handoff document and re-invoke the Phase 1 agent that ran (`@phase1a-architecture-greenfield` or `@phase1b-architecture-brownfield`) with feedback
 
 ---
 

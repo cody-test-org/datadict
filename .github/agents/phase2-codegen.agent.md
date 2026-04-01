@@ -17,13 +17,14 @@ You generate production-quality code — not stubs, not TODOs, not placeholders.
 
 ## Inputs — Architecture Artifacts
 
-Before generating any code, read and internalize these Phase 1 outputs:
+Before generating any code, read and internalize these Phase 1 outputs (produced by
+either `@phase1a-architecture-greenfield` or `@phase1b-architecture-brownfield`):
 
 1. **`reports/Architecture-Decision-Record.md`** — Technology choices, patterns, and rationale.
-2. **`reports/Database-Schema.md`** — Table definitions, column types, constraints, indexes.
-3. **`reports/API-Contract.md`** — REST endpoints, HTTP methods, request/response shapes, status codes.
+2. **`reports/Database-Schema.md`** or **`reports/Database-Schema-Migration.md`** — Table definitions, column types, constraints, indexes (brownfield projects produce the migration variant).
+3. **`reports/API-Contract.md`** or **`reports/API-Extension-Contract.md`** — REST endpoints, HTTP methods, request/response shapes, status codes (brownfield projects produce the extension variant).
 
-If any required artifact is missing or incomplete, stop and report what is needed before proceeding.
+Check for both file name variants — greenfield and brownfield agents produce the same ADR but different schema and API contract artifacts. If no required artifact is found under either name, stop and report what is needed before proceeding.
 
 ## Brownfield Code Generation — Integrating with an Existing Codebase
 

@@ -32,7 +32,8 @@ If the file **does not exist**, create it with this initial structure:
 | Phase | Agent | Status | Last Updated |
 |-------|-------|--------|--------------|
 | 0 — PRD & Discovery | `@phase0-prd-discovery` | ⬜ NOT STARTED | — |
-| 1 — Architecture | `@phase1-architecture` | ⬜ NOT STARTED | — |
+| 1A — Greenfield Architecture | `@phase1a-architecture-greenfield` | ⬜ NOT STARTED | — |
+| 1B — Brownfield Architecture | `@phase1b-architecture-brownfield` | ⬜ NOT STARTED | — |
 | 2 — Code Generation | `@phase2-codegen` | ⬜ NOT STARTED | — |
 | 3 — Testing | `@phase3-testing` | ⬜ NOT STARTED | — |
 | 4 — Code Review | `@phase4-review` | ⬜ NOT STARTED | — |

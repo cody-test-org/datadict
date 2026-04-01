@@ -22,9 +22,9 @@ graph LR
     P0 -- PRD.md --> R1
 
     R1{PRD Review}
-    R1 -- approved --> P1
+    R1 -- "approved (routed by project type)" --> P1
 
-    P1["Phase 1\nArchitecture"]
+    P1["Phase 1A/1B\nArchitecture"]
     P1 -- ADR + Schema --> C1
 
     C1{Architecture\nReview}
@@ -66,7 +66,8 @@ graph LR
 | Phase | Agent | What It Does | Key Outputs |
 |-------|-------|-------------|-------------|
 | **0** | `@phase0-prd-discovery` | Analyzes project description, discovers gaps, generates user stories | `PRD.md`, `User-Stories.md` |
-| **1** | `@phase1-architecture` | Designs system, DB schema, API contracts, writes ADR | `ADR.md`, `Database-Schema.md`, `API-Contract.md` |
+| **1A** | `@phase1a-architecture-greenfield` | Designs new system, DB schema, API contracts, writes ADR | `ADR.md`, `Database-Schema.md`, `API-Contract.md` |
+| **1B** | `@phase1b-architecture-brownfield` | Designs integration with existing system, schema migration, API extensions | `ADR.md`, `Database-Schema-Migration.md`, `API-Extension-Contract.md` |
 | **2** | `@phase2-codegen` | Generates JPA entities, services, controllers, Flyway migrations | Java source files in `src/` |
 | **3** | `@phase3-testing` | Generates JUnit 5 + Mockito + Testcontainers test suites | Test files, `Test-Plan.md` |
 | **4** | `@phase4-review` | Reviews for security, Spring anti-patterns, performance | `Code-Review.md` |
@@ -84,7 +85,8 @@ datadict/
 │   ├── agents/                          # 🤖 Copilot custom agents
 │   │   ├── sdlc-orchestrator.agent.md       # Master pipeline manager
 │   │   ├── phase0-prd-discovery.agent.md    # Requirements → PRD
-│   │   ├── phase1-architecture.agent.md     # System design & schemas
+│   │   ├── phase1a-architecture-greenfield.agent.md  # Greenfield system design
+│   │   ├── phase1b-architecture-brownfield.agent.md  # Brownfield integration design
 │   │   ├── phase2-codegen.agent.md          # Java/Spring Boot code gen
 │   │   ├── phase3-testing.agent.md          # Test suite generation
 │   │   ├── phase4-review.agent.md           # Code review
@@ -169,7 +171,8 @@ The orchestrator will run **Integration Discovery** first to capture your existi
 If you already have a PRD or architecture docs, invoke any phase directly:
 
 ```
-@phase1-architecture Design the architecture based on reports/PRD.md
+@phase1a-architecture-greenfield Design the architecture based on reports/PRD.md
+@phase1b-architecture-brownfield Design the architecture based on reports/PRD.md and existing system
 @phase2-codegen Generate code from the architecture in reports/
 @phase3-testing Write tests for the code in src/
 ```
@@ -188,7 +191,8 @@ If you already have a PRD or architecture docs, invoke any phase directly:
 |-------|------------|--------------|---------|
 | **Orchestrator** | `@sdlc-orchestrator` | Manages full pipeline, handoffs, checkpoints | `Report-Status.md`, handoff docs |
 | **PRD Discovery** | `@phase0-prd-discovery` | Discovers requirements, generates PRD | `PRD.md`, `User-Stories.md`, `Open-Questions.md` |
-| **Architecture** | `@phase1-architecture` | Designs system, DB schema, API contracts | `ADR.md`, `Database-Schema.md`, `API-Contract.md` |
+| **Greenfield Architecture** | `@phase1a-architecture-greenfield` | Designs new system, DB schema, API contracts | `ADR.md`, `Database-Schema.md`, `API-Contract.md` |
+| **Brownfield Architecture** | `@phase1b-architecture-brownfield` | Designs integration, schema migration, API extensions | `ADR.md`, `Database-Schema-Migration.md`, `API-Extension-Contract.md` |
 | **Code Gen** | `@phase2-codegen` | Generates Java/Spring Boot source code | Java files in `src/` |
 | **Testing** | `@phase3-testing` | Generates JUnit 5 test suites | Test files in `src/test/`, `Test-Plan.md` |
 | **Code Review** | `@phase4-review` | Reviews code for bugs & anti-patterns | `Code-Review.md` |
