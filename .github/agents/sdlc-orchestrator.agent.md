@@ -8,7 +8,7 @@ description: >-
   Grounding use case: Data Dictionary service (OpenAPI specs → PostgreSQL FTS → Search UI
   on API Portal).
 tools: ['read', 'edit', 'search', 'execute', 'web', 'agent']
-skills: ['openapi-parsing', 'pg-fulltext-search', 'java-spring-patterns', 'data-export', 'prd-generation']
+skills: ['openapi-parsing', 'pg-fulltext-search', 'java-spring-patterns', 'data-export', 'prd-generation', 'aws-patterns', 'cloud-agnostic-patterns']
 ---
 
 # SDLC Orchestrator
@@ -31,7 +31,7 @@ satisfied.
 | Framework | Spring Boot 3.x |
 | Database | PostgreSQL 15+ (with full-text search & pg_trgm) |
 | Build | Maven |
-| Cloud | Azure |
+| Cloud | Determined during Phase 0 (Azure, AWS, GCP, or on-premises) |
 | Testing | JUnit 5, Mockito, Testcontainers |
 | Use Case | Data Dictionary — OpenAPI specs → PostgreSQL FTS → Search UI |
 
@@ -303,13 +303,34 @@ Create it at pipeline start; update it after every phase transition.
 
 When invoked for a **new project**, follow this sequence:
 
-1. **Initialize status tracking** — Create `reports/Report-Status.md` with project
-   metadata, all phases marked `[ ]`, and current phase set to Phase 0.
-2. **Create directories** — Ensure `reports/` and `handoffs/` directories exist.
-3. **Gather context** — Read any existing files in the repository (README, specs, docs)
-   to understand the project's current state.
-4. **Start Phase 0** — Delegate to `@phase0-prd-discovery` with all gathered context.
-5. **Monitor and iterate** — After each phase completes, validate exit criteria, create
+1. **Classify the project type** — Ask the user:
+   > **"Is this a new project (greenfield) or are you adding to an existing system (bolt-on)?"**
+   - If the user's description mentions an existing portal, platform, or system they're integrating
+     with, treat it as **bolt-on** even if they don't explicitly say so.
+   - If unclear, ask before proceeding — the answer fundamentally changes the approach.
+
+2. **If greenfield:**
+   - Initialize status tracking — Create `reports/Report-Status.md` with project metadata, all
+     phases marked `[ ]`, and current phase set to Phase 0.
+   - Create directories — Ensure `reports/` and `handoffs/` directories exist.
+   - Gather context — Read any existing files in the repository.
+   - Start Phase 0 — Delegate to `@phase0-prd-discovery` with all gathered context.
+
+3. **If bolt-on:**
+   - Initialize status tracking as above, but note `Project Type: Bolt-On` in the status report.
+   - **Emphasize integration discovery** — When delegating to `@phase0-prd-discovery`, explicitly
+     instruct it to run Integration Discovery (Step 0) first:
+     ```
+     @phase0-prd-discovery Generate PRD for: [project description]
+     IMPORTANT: This is a BOLT-ON project integrating with an existing system.
+     Run Integration Discovery to capture the existing system context (Section 8a)
+     before standard requirements analysis. The existing system is: [description]
+     ```
+   - Ensure Phase 0 output includes a fully populated Section 8a in the PRD.
+   - Ensure Phase 1 receives the bolt-on context and applies integration constraints.
+   - Ensure Phase 2 reads the existing codebase before generating code.
+
+4. **Monitor and iterate** — After each phase completes, validate exit criteria, create
    the handoff document, and trigger the next phase.
 
 When invoked to **resume a pipeline**:

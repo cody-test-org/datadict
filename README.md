@@ -6,9 +6,9 @@
 
 This is a **reusable agentic SDLC framework** — a set of GitHub Copilot custom agents and skills that automate the software development lifecycle from requirements through documentation. Each SDLC phase has a dedicated agent with specialized domain knowledge (skills), and a master orchestrator manages the pipeline end-to-end.
 
-**Grounding use case:** A Data Dictionary API Portal — auto-generated from OpenAPI specifications with PostgreSQL full-text search, deployed to Azure.
+**Grounding use case:** A Data Dictionary API Portal — auto-generated from OpenAPI specifications with PostgreSQL full-text search.
 
-**Tech stack:** Java 21+ · Spring Boot 3.x · PostgreSQL 15+ · Maven · Azure · GitHub Actions
+**Tech stack:** Java 21+ · Spring Boot 3.x · PostgreSQL 15+ · Maven · GitHub Actions
 
 ---
 
@@ -131,7 +131,7 @@ datadict/
 - **GitHub Copilot Business** or Enterprise license (agents require it)
 - This repository cloned and opened in VS Code
 
-### Option 1: Full Pipeline (Recommended)
+### Option 1: Full Pipeline — New Project (Greenfield)
 
 Open Copilot Chat and invoke the orchestrator:
 
@@ -141,7 +141,22 @@ Open Copilot Chat and invoke the orchestrator:
 
 The orchestrator will guide you through every phase, creating handoff documents and pausing at human checkpoints.
 
-### Option 2: Start with PRD Only
+### Option 2: Full Pipeline — Adding to an Existing System (Bolt-On)
+
+If you're integrating into an existing platform (e.g., adding a service to an existing portal):
+
+```
+@sdlc-orchestrator Add a feature to an existing system:
+
+Project: [describe what you're building]
+Existing system: [describe the platform you're integrating with]
+Tech stack: [e.g., React 18 frontend, Java 21 / Spring Boot 3.x backend, PostgreSQL 15 on AWS RDS]
+Auth: [e.g., OAuth2 with Azure AD]
+```
+
+The orchestrator will run **Integration Discovery** first to capture your existing system's constraints before generating requirements, architecture, and code that fits your existing codebase.
+
+### Option 3: Start with PRD Only
 
 ```
 @phase0-prd-discovery Analyze this project and generate a PRD:
@@ -149,7 +164,7 @@ The orchestrator will guide you through every phase, creating handoff documents 
 [paste your project description, requirements, or even rough notes]
 ```
 
-### Option 3: Jump to a Specific Phase
+### Option 4: Jump to a Specific Phase
 
 If you already have a PRD or architecture docs, invoke any phase directly:
 
@@ -290,7 +305,7 @@ Hand off to `@next-agent` for the next phase.
 | **Build** | Maven | Spring Boot starter parent, plugin management |
 | **Testing** | JUnit 5, Mockito, Testcontainers | Unit + integration with real PostgreSQL |
 | **Export** | Apache POI, OpenCSV | Excel (XSSF/SXSSF) and CSV generation |
-| **Cloud** | Azure | Container Apps, PostgreSQL Flexible Server, Key Vault |
+| **Cloud** | Configurable | Azure, AWS, GCP, or on-premises — determined during Phase 0 |
 | **API Docs** | SpringDoc OpenAPI | Auto-generated Swagger UI from controllers |
 
 ---

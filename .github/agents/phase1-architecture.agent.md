@@ -31,6 +31,78 @@ and produce actionable artifacts that Phase 2 (Code Generation) can implement di
 
 ---
 
+## Bolt-On Architecture Considerations
+
+When the PRD contains a **"Section 8a: Existing System Context"**, this is a bolt-on project
+integrating into an existing system. The architecture must respect existing constraints rather
+than designing from scratch.
+
+### Reading Existing System Context
+
+1. Check `reports/PRD.md` for Section 8a. If present, extract:
+   - Existing tech stack, versions, and frameworks
+   - Existing database type, version, and schema conventions
+   - Existing auth/authz mechanism and identity provider
+   - Existing API conventions (URL patterns, versioning, error formats)
+   - Existing deployment pipeline and infrastructure
+   - Hard constraints and integration points
+
+2. These become **non-negotiable constraints** for architecture decisions.
+
+### Architecture Rules for Bolt-On Projects
+
+| Area | Greenfield Approach | Bolt-On Approach |
+|---|---|---|
+| **Tech stack** | Choose optimal technologies | Match existing technologies and versions |
+| **Database** | Design new schema freely | Add tables/schemas to existing database if permitted |
+| **Auth** | Design new auth mechanism | Integrate with existing auth (add scopes, not new providers) |
+| **API design** | Define new conventions | Follow existing URL patterns, versioning, and error formats |
+| **UI** | Choose frontend framework | Use existing frontend framework and component library |
+| **Deployment** | Design new pipeline | Deploy through existing CI/CD pipeline |
+| **Logging** | Set up new observability | Use existing logging and monitoring infrastructure |
+
+### Specific Guidance
+
+1. **Match existing tech patterns** — If the portal uses React 18, design APIs that serve
+   that frontend well. If the backend is Spring Boot 2.7, don't assume Spring Boot 3.x
+   features unless a migration is planned. Align Java versions, dependency versions, and
+   build tool versions with the existing project.
+
+2. **Use existing database if available** — Don't create a new PostgreSQL instance if one
+   exists. Instead, propose a new schema (e.g., `datadict`) within the existing database,
+   or add tables with a naming prefix. Respect existing naming conventions (e.g., if tables
+   use `snake_case` with a `tbl_` prefix, follow that pattern).
+
+3. **Respect existing auth mechanism** — Don't design new authentication if the portal
+   already has OAuth2 with Azure AD. Instead, define new scopes or roles within the
+   existing identity configuration. Document what new scopes need to be registered.
+
+4. **Follow existing API conventions** — If the portal uses `/api/v1/{resource}` with
+   offset pagination and RFC 9457 error responses, use the same patterns. Don't introduce
+   cursor-based pagination or a different error format.
+
+5. **Consider existing deployment pipeline** — If the portal deploys via GitHub Actions to
+   Azure Container Apps, design the new service to use the same pipeline. Document any
+   new pipeline steps needed (e.g., new Docker image, new Container App).
+
+6. **Reuse shared libraries** — Identify shared modules, internal SDKs, or utility classes
+   in the existing codebase that should be reused rather than reimplemented.
+
+### ADR Documentation for Bolt-On Projects
+
+The ADR must explicitly document integration decisions with rationale:
+
+- **"We chose to add tables to the existing portal database rather than create a separate
+  database because..."** (e.g., simpler operations, shared transactions, existing backup strategy)
+- **"We chose to extend the existing Spring Security configuration rather than add a new
+  auth mechanism because..."** (e.g., single identity provider, consistent user experience)
+- **"We chose to follow the portal's existing `/api/v1/` URL convention rather than use
+  `/api/v2/` because..."** (e.g., consistent consumer experience, shared gateway config)
+- **"We deviated from the existing pattern of X and instead used Y because..."**
+  (document any exceptions with strong justification)
+
+---
+
 ## Prerequisites
 
 1. **PRD must exist** — `reports/PRD.md` must be present. If it is missing, stop and instruct
@@ -46,7 +118,10 @@ and produce actionable artifacts that Phase 2 (Code Generation) can implement di
 
 1. Read `reports/PRD.md` in its entirety.
 2. Read `handoffs/phase-0-to-1.md` if present.
-3. Extract and summarize:
+3. **Check for Section 8a (Existing System Context)** — If present, this is a bolt-on
+   project. Apply all constraints from the Bolt-On Architecture Considerations section above.
+   The existing system's tech stack, database, auth, and API conventions become hard constraints.
+4. Extract and summarize:
    - **Domain entities** and their relationships.
    - **Core use cases** and user stories.
    - **Non-functional requirements** (performance, scalability, security).
@@ -196,12 +271,13 @@ The ADR must include:
 6. **Alternatives Considered** — What other options were evaluated and why were they rejected?
 
 Cover at minimum these decision areas:
-- Runtime & framework choice (Java 21 + Spring Boot 3.x).
+- Runtime & framework choice (Java 21 + Spring Boot 3.x — or match existing system).
 - Database choice (PostgreSQL with FTS) and ORM strategy (Spring Data JPA).
-- API design style (REST, versioning, error handling).
+- API design style (REST, versioning, error handling — or match existing conventions).
 - Search strategy (tsvector + pg_trgm vs. external search engine).
-- Authentication & authorization approach.
+- Authentication & authorization approach (new design or integration with existing auth).
 - Module structure (single module vs. multi-module Maven).
+- **For bolt-on projects:** Integration decisions — why reuse vs. create new for each major component.
 
 Write the ADR to `reports/Architecture-Decision-Record.md`.
 

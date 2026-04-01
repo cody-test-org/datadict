@@ -25,6 +25,61 @@ Before generating any code, read and internalize these Phase 1 outputs:
 
 If any required artifact is missing or incomplete, stop and report what is needed before proceeding.
 
+## Bolt-On Code Generation — Integrating with an Existing Codebase
+
+When the PRD contains **Section 8a (Existing System Context)** or the ADR references
+integration with an existing system, this is a bolt-on project. Code generation must
+produce code that fits seamlessly into the existing codebase rather than imposing new
+conventions.
+
+### Before Generating Any Code
+
+1. **Read the existing codebase** — Use file search and read tools to explore the existing
+   project structure, packages, and patterns. Identify:
+   - Package naming conventions (e.g., `com.company.portal.feature`)
+   - Class naming patterns (e.g., `XxxController`, `XxxServiceImpl`, `XxxDto`)
+   - Import patterns (e.g., do they use Lombok? MapStruct? custom annotations?)
+   - Configuration style (YAML vs. properties? profile naming?)
+   - Existing shared utilities, base classes, or abstract superclasses
+   - Existing exception handling (`@ControllerAdvice` already defined?)
+   - Existing security configuration (how are endpoints secured?)
+
+2. **Identify reusable components** — Look for:
+   - Base entity classes with common audit fields
+   - Shared DTOs, error response formats, or page wrapper classes
+   - Shared configuration (datasource, security, CORS, etc.)
+   - Internal libraries or modules to depend on rather than recreate
+   - Existing Flyway migration numbering (what version number to start from?)
+
+3. **Understand the existing project structure** — Don't impose a new layout if one exists.
+   If the existing project uses `feature-based` packaging (`com.company.portal.users`,
+   `com.company.portal.products`), add new features the same way
+   (`com.company.portal.datadictionary`). Don't switch to layer-based packaging.
+
+### Bolt-On Code Standards
+
+| Rule | Guidance |
+|---|---|
+| Package structure | Follow the existing project's package organization — don't reorganize |
+| Naming conventions | Match existing class/method/variable naming patterns exactly |
+| Coding style | Match existing formatting, brace style, comment style (read existing files) |
+| Shared libraries | Use existing utility classes, base entities, and shared DTOs — don't recreate |
+| Exception handling | Integrate with existing `@ControllerAdvice` — add new handlers, don't create a second one |
+| Security config | Extend existing Spring Security config — add new endpoint rules, don't override |
+| Configuration | Add properties to existing `application.yml` — don't create separate config files unless the project uses per-module configs |
+| Flyway migrations | Continue the existing version sequence (e.g., if latest is `V14__`, start at `V15__`) |
+| Dependencies | Add to existing `pom.xml` — don't create a separate POM unless the project uses multi-module |
+| Tests | Follow existing test patterns (naming, structure, test utilities, base test classes) |
+
+### What NOT to Generate for Bolt-On Projects
+
+- **Do NOT generate a new `Application.java`** — one already exists
+- **Do NOT generate a new `pom.xml`** — add dependencies to the existing one
+- **Do NOT generate global exception handlers** if one already exists — extend it
+- **Do NOT generate new security configuration** — extend the existing one
+- **Do NOT generate new `application.yml`** from scratch — add properties to existing files
+- **Do NOT generate a new `.gitignore`, `Dockerfile`, or CI/CD config** unless specifically requested
+
 ## Project Scaffolding
 
 Generate a Maven project rooted at `src/` with this standard layout:

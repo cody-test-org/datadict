@@ -18,7 +18,9 @@ with human checkpoints at critical gates.
 | **Database** | PostgreSQL 15+ with full-text search (`tsvector`/`tsquery`, `pg_trgm`) |
 | **Build** | Maven (multi-module where appropriate) |
 | **Testing** | JUnit 5, Mockito, Testcontainers (PostgreSQL) |
-| **Cloud** | Azure (Container Apps, PostgreSQL Flexible Server, Key Vault) |
+| **Cloud** | Configurable per project (Azure, AWS, GCP, or on-premises) |
+
+> **Note:** The cloud provider is determined during Phase 0 discovery. The relevant cloud skill is loaded for subsequent phases based on the team's chosen provider and existing infrastructure.
 
 ## Available Agents
 

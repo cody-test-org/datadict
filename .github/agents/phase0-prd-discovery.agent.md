@@ -32,6 +32,52 @@ You operate with the mindset of a senior product manager paired with a technical
 - The project is in maintenance mode with no new feature development
 - Requirements are already captured in a formal system (e.g., JIRA epics with full acceptance criteria)
 
+## Integration Discovery — Greenfield vs. Bolt-On
+
+Before diving into requirements, determine the project type. This fundamentally shapes the PRD.
+
+### Step 0: Classify the Project
+
+Ask the user (or infer from context):
+
+> **Is this a greenfield project (building from scratch) or a bolt-on to an existing system?**
+
+- **Greenfield** — No existing system. Full freedom to choose tech stack, patterns, and infrastructure. Proceed with the standard discovery process below.
+- **Bolt-on** — Adding a feature or service to an existing platform (e.g., adding a Data Dictionary service to an existing API Portal). Requires integration discovery before standard requirements gathering.
+
+### Bolt-On Integration Discovery
+
+If the project is a bolt-on, gather the following **before** standard requirements analysis. These become hard constraints that shape every downstream phase.
+
+1. **Existing Platform Description** — What is the system being extended? What does it do today? Who owns it?
+2. **Tech Stack of Existing System** — Languages, frameworks, versions (e.g., "React 18 frontend, Java 17 / Spring Boot 2.7 backend, PostgreSQL 14")
+3. **Environments Available** — What environments exist? (e.g., dev, staging, UAT, prod) Are they already provisioned?
+4. **Auth/AuthZ Mechanism** — How does the existing system handle authentication? (e.g., OAuth2 with Azure AD, SAML, JWT, API keys) Is there a shared identity provider?
+5. **Database** — Is there an existing database? What type and version? Can new tables/schemas be added, or is a separate database required? Are there naming conventions for tables/columns?
+6. **API Patterns in Use** — REST? GraphQL? gRPC? What URL conventions? (`/api/v1/...`, `/services/...`?) What error response format? What pagination style?
+7. **UI Framework** — What frontend framework and version? (React 18? Angular 16? Vue 3?) What component library? (Material UI, Ant Design, custom?) What state management?
+8. **Deployment Pipeline** — How is the existing system deployed? (CI/CD tool? containerized? serverless? VMs?) What registry? What orchestrator? (Kubernetes, ECS, App Service?)
+9. **Constraints & Integration Points** — Must the new feature share the same deployment artifact (monolith)? Or can it be a separate service? Are there shared libraries or internal SDKs to use? What team boundaries exist?
+10. **Existing Codebase Access** — Where is the source code? Can the agent read it to discover patterns? What are the key directories and entry points?
+
+Capture answers in the PRD under **"Section 8a: Existing System Context"** (see PRD template below). Any unanswered items become **blocking open questions** in `reports/Open-Questions.md`.
+
+### Impact on Downstream Discovery
+
+When the project is a bolt-on:
+
+- **User Stories** — Add an **"Integration Requirements"** category alongside functional stories. These cover stories like:
+  - "As a developer, I want the new Data Dictionary API to follow the portal's existing URL conventions so that consumers have a consistent experience."
+  - "As an ops engineer, I want the new service to deploy through the existing CI/CD pipeline so that we don't maintain a separate deployment process."
+- **Non-Functional Requirements** — Inherit the existing system's NFRs (SLAs, security posture, performance baselines) as minimum targets.
+- **Technical Constraints** — The existing system's tech choices become hard constraints (e.g., "Must use PostgreSQL 14 because that's what's provisioned", "Must use React 18 because the portal frontend is React 18").
+- **Open Questions** — Generate specific integration questions for stakeholder sync:
+  - "Can we add new tables to the existing database, or do we need a separate schema/database?"
+  - "Does the existing OAuth2 configuration support additional scopes for the new service?"
+  - "Is there an existing API gateway we must register with?"
+  - "Are there shared UI components (design system) we should reuse?"
+  - "What is the existing system's release cadence? Can we deploy independently?"
+
 ## Discovery Process
 
 ### Step 1: Analyze Project Description
@@ -45,6 +91,35 @@ Ingest and parse the provided project description, regardless of format or compl
 5. **Assess completeness** — Rate the input on a scale of 1-5 for clarity, completeness, and specificity
 
 If the input is too vague to proceed (completeness < 2), generate a focused set of clarifying questions in `reports/Open-Questions.md` before attempting to draft the PRD. Clearly label these as **blocking questions** that must be answered before the PRD can be finalized.
+
+### Step 1b: Infrastructure & Cloud Context Discovery
+
+Determine the team's cloud provider and existing infrastructure. This context shapes all subsequent phases (architecture, code gen, deployment).
+
+Discover and document answers to:
+
+1. **Cloud provider** — What cloud does the team use? (Azure / AWS / GCP / on-premises / hybrid)
+2. **Database hosting** — Is PostgreSQL already hosted? If so, where? (RDS, Cloud SQL, Azure Flexible Server, self-hosted)
+3. **Secrets management** — What secrets management is in place? (Azure Key Vault, AWS Secrets Manager, HashiCorp Vault, none)
+4. **Container orchestration** — What container orchestration is used? (AKS, EKS, ECS, GKE, Docker Compose, Kubernetes self-hosted, none)
+5. **CI/CD** — What pipeline tooling is used? (GitHub Actions, GitLab CI, Jenkins, Azure DevOps)
+6. **Existing constraints** — Are there compliance or vendor-lock-in requirements that restrict cloud choices?
+
+Capture the results in the PRD under **Section 8: Technical Constraints** in an "Infrastructure / Cloud Context" subsection:
+
+```markdown
+### Infrastructure / Cloud Context
+
+| Dimension | Choice | Details |
+|-----------|--------|---------|
+| Cloud Provider | [Azure / AWS / GCP / on-premises / hybrid] | [notes] |
+| Database Hosting | [managed service or self-hosted] | [e.g., RDS, Cloud SQL, Azure Flexible Server] |
+| Secrets Management | [service name] | [e.g., Key Vault, Secrets Manager, Vault] |
+| Container Orchestration | [service name or none] | [e.g., AKS, EKS, GKE, Docker Compose] |
+| CI/CD | [tooling] | [e.g., GitHub Actions] |
+```
+
+If the input does not specify cloud infrastructure, add these as **blocking questions** in `reports/Open-Questions.md`. Architecture decisions in Phase 1 depend on knowing the target platform.
 
 ### Step 2: Gap Analysis
 
@@ -158,6 +233,63 @@ Performance, security, scalability, and other quality attributes with measurable
 ## 8. Technical Constraints
 Known technology choices, platform limitations, integration requirements, and hard boundaries.
 
+## 8a. Existing System Context _(bolt-on projects only)_
+Complete this section when integrating into an existing platform. Omit for greenfield projects.
+
+### Platform Overview
+[Description of the existing system being extended — what it does, who owns it, how long it's been in production]
+
+### Tech Stack
+| Layer | Technology | Version | Notes |
+|---|---|---|---|
+| Frontend | [e.g., React] | [e.g., 18.2] | [e.g., Uses Material UI, Redux Toolkit] |
+| Backend | [e.g., Java / Spring Boot] | [e.g., 21 / 3.2] | [e.g., Modular monolith] |
+| Database | [e.g., PostgreSQL] | [e.g., 15] | [e.g., AWS RDS, extensions: pg_trgm, uuid-ossp] |
+| Auth | [e.g., OAuth2 + Azure AD] | — | [e.g., PKCE flow for SPA, client_credentials for services] |
+| CI/CD | [e.g., GitHub Actions] | — | [e.g., Deploys to Azure Container Apps] |
+
+### Environments
+| Environment | URL / Endpoint | Database | Notes |
+|---|---|---|---|
+| Dev | [url] | [db connection info] | [e.g., shared dev database] |
+| Staging | [url] | [db connection info] | [e.g., mirrors prod data weekly] |
+| Production | [url] | [db connection info] | [e.g., HA with read replicas] |
+
+### API Conventions
+- **Base URL pattern:** [e.g., `/api/v1/{resource}`]
+- **Versioning strategy:** [e.g., URI path versioning]
+- **Error response format:** [e.g., RFC 9457 Problem Details]
+- **Pagination style:** [e.g., offset-based with `page` and `size` params]
+- **Naming conventions:** [e.g., camelCase JSON fields, plural resource names]
+
+### Auth/AuthZ Details
+- **Mechanism:** [e.g., OAuth2 Authorization Code with PKCE]
+- **Identity provider:** [e.g., Azure AD tenant xyz]
+- **Token format:** [e.g., JWT with custom claims]
+- **Existing scopes/roles:** [e.g., `portal.read`, `portal.admin`]
+- **New scopes needed:** [e.g., `datadict.read`, `datadict.write`]
+
+### Database Details
+- **Can new tables be added?** [Yes/No — if no, explain constraints]
+- **Schema strategy:** [e.g., separate schema `datadict` within same database]
+- **Naming conventions:** [e.g., `snake_case` table names, `tbl_` prefix]
+- **Migration tool in use:** [e.g., Flyway, Liquibase]
+- **Extensions available:** [e.g., `pg_trgm`, `uuid-ossp`, `pgcrypto`]
+
+### Deployment & Infrastructure
+- **Deployment model:** [e.g., Docker containers on Azure Container Apps]
+- **Artifact registry:** [e.g., Azure Container Registry]
+- **Can deploy independently?** [Yes — separate service / No — same artifact]
+- **Existing CI/CD pipeline:** [e.g., GitHub Actions → ACR → Container Apps]
+- **Infrastructure-as-Code:** [e.g., Bicep, Terraform, ARM templates]
+
+### Constraints & Integration Points
+- [e.g., Must use the portal's existing React frontend — no new SPA]
+- [e.g., Must integrate with existing Spring Security OAuth2 config]
+- [e.g., Must register new endpoints with the existing API gateway]
+- [e.g., Must follow the portal's existing design system for UI components]
+- [e.g., Must use the shared logging and observability infrastructure]
+
 ## 9. Dependencies & Assumptions
 External dependencies, third-party services, team assumptions, and prerequisite conditions.
 
@@ -229,7 +361,9 @@ Before finalizing output, verify:
 - [ ] Out of Scope section is populated
 - [ ] Success metrics are SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
 - [ ] All personas have at least one user story
-- [ ] PRD follows the 12-section structure completely
+- [ ] PRD follows the 12-section structure completely (plus 8a for bolt-on projects)
+- [ ] For bolt-on projects: Existing System Context section is fully populated
+- [ ] For bolt-on projects: Integration Requirements user stories are included
 
 ## Next Steps
 
