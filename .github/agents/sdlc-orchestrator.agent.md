@@ -235,9 +235,13 @@ When a human checkpoint is reached:
 1. **Summarize** what was completed and what needs review
 2. **List** the specific artifacts to review with file paths
 3. **Highlight** any risks, trade-offs, or concerns
-4. **Ask** for explicit approval: `"Please review and reply 'approved' to proceed to Phase N+1."`
-5. **Do not proceed** until the human responds with approval
-6. **Log** the approval in `reports/Report-Status.md` with timestamp
+4. **Capture feedback** — Invoke `@checkpoint-feedback` to record structured reviewer feedback.
+   Feedback is written to `reports/feedback/` with phase, decision, and rationale.
+5. **Ask** for explicit approval: `"Please review and reply 'approved' to proceed to Phase N+1."`
+6. **Do not proceed** until the human responds with approval
+7. **Log** the approval in `reports/Report-Status.md` with timestamp
+8. **Extract instincts** — After the phase is approved (or corrected and re-approved), invoke
+   `@instinct-manager` to extract and store instincts from the checkpoint feedback and phase output
 
 ## Status Tracking
 
@@ -368,6 +372,19 @@ If a phase fails or produces unsatisfactory results:
 4. **Update handoff documents** if prior phase outputs need correction
 5. **Never skip a failed phase** — resolve it before moving forward
 
+## Learning Loop
+
+This pipeline gets smarter with every run through a continuous learning loop:
+
+1. **Pre-Phase**: Agents read instincts + past feedback before starting work
+2. **Execution**: Agents apply learned patterns alongside their base skills
+3. **Post-Phase**: Agents perform self-assessment, noting decisions and discoveries
+4. **Checkpoint**: Human feedback captured via `@checkpoint-feedback`
+5. **Instinct Extraction**: `@instinct-manager` adds approved instincts to the store
+6. **Skill Evolution**: When 5+ related instincts accumulate, `@skill-evolver` proposes SKILL.md updates
+
+Instincts persist across runs (per-project) and can be copied to new projects (cross-project learning).
+
 ## Pipeline Execution Commands
 
 Use these patterns when delegating to phase agents:
@@ -380,6 +397,15 @@ Use these patterns when delegating to phase agents:
 @phase3-testing Generate test suites for src/main/java/**
 @phase4-review Review code quality and security for the codebase
 @phase5-documentation Generate API docs, user guide, and runbook
+```
+
+### Utility Agents
+
+```
+@get-status                Show pipeline progress and current phase
+@checkpoint-feedback       Capture structured feedback at checkpoints
+@instinct-manager          Manage the instinct store (add/prune/detect patterns)
+@skill-evolver             Propose SKILL.md updates from accumulated instincts
 ```
 
 ## Guidelines
@@ -401,3 +427,17 @@ Use these patterns when delegating to phase agents:
 - USE the handoff protocol even for re-runs to maintain an audit trail
 - TRACK every issue with a unique ID (ISS-NNN) in the status report
 - ESCALATE to human review whenever a phase produces results below quality thresholds
+
+## Post-Project Wrap-Up
+
+After Phase 5 completes and the Final Review passes, run the learning loop wrap-up:
+
+1. **Final instinct extraction** — Invoke `@instinct-manager` for end-of-project pattern detection
+   across all phases, handoffs, and checkpoint feedback
+2. **Skill evolution check** — Invoke `@skill-evolver` to check if any skill updates should be
+   proposed based on accumulated instincts (threshold: 5+ related instincts)
+3. **Project Retrospective** — Generate `reports/Project-Retrospective.md` summarizing:
+   - Total instincts learned during the project
+   - Which phases generated the most feedback
+   - Skill updates proposed or applied
+   - Recommendations for the next project run

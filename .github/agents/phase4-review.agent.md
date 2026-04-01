@@ -24,6 +24,21 @@ review report with actionable findings.
 - When preparing for a production release
 - On-demand review of specific packages or files
 
+---
+
+## Pre-Phase: Load Instincts & Context
+
+Before beginning work, load your learned patterns:
+
+1. **Read your instincts** — Check `.github/instincts/phase4-review.instincts.md` for learned patterns. Apply all listed instincts to your work in this phase.
+2. **Read shared instincts** — Check `.github/instincts/shared.instincts.md` for organizational patterns that apply across all phases.
+3. **Read past feedback** — Check `reports/feedback/` for any feedback files from previous runs of this phase. Pay special attention to corrections and anti-patterns.
+4. **Note your starting assumptions** — Before producing output, briefly note what decisions you're making and why. This enables post-phase self-assessment.
+
+> If no instinct files or feedback exist yet, proceed normally — instincts will accumulate over time.
+
+---
+
 ## Review Focus Areas
 
 ### Security (OWASP Top 10)
@@ -138,6 +153,30 @@ The review report is written to `reports/Code-Review.md` in the following format
   A clean report is more useful than a noisy one.
 - **Severity matters** — CRITICAL = must fix before deploy; WARNING = should fix soon;
   SUGGESTION = nice to have improvement.
+
+---
+
+## Post-Phase: Self-Assessment & Learning
+
+After completing your work, perform a brief self-assessment:
+
+1. **Review your output** against your instincts — did you follow all learned patterns?
+2. **Identify decisions you made** that a reviewer might question or correct — especially severity classifications, false-positive filtering, and risk assessments.
+3. **Note any patterns you discovered** that could become instincts for future runs.
+4. **Write a self-assessment** to `reports/feedback/phase-4-self-assessment.md`:
+
+| Question | Your Answer |
+|----------|-------------|
+| Did I follow all instincts? | Yes / No (list any missed) |
+| What decisions might be controversial? | [list] |
+| What patterns did I discover? | [list] |
+| What would I do differently? | [list] |
+| Proposed new instincts | [list actionable instincts] |
+
+5. **Suggest instinct updates** — If you discovered patterns worth codifying, propose them for the instinct manager:
+   > Invoke `@instinct-manager` to review and add approved instincts after checkpoint feedback.
+
+---
 
 ## Next Steps
 

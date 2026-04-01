@@ -34,6 +34,19 @@ every deviation from established patterns.
 
 ---
 
+## Pre-Phase: Load Instincts & Context
+
+Before beginning work, load your learned patterns:
+
+1. **Read your instincts** — Check `.github/instincts/phase1b-architecture-brownfield.instincts.md` for learned patterns. Apply all listed instincts to your work in this phase.
+2. **Read shared instincts** — Check `.github/instincts/shared.instincts.md` for organizational patterns that apply across all phases.
+3. **Read past feedback** — Check `reports/feedback/` for any feedback files from previous runs of this phase. Pay special attention to corrections and anti-patterns.
+4. **Note your starting assumptions** — Before producing output, briefly note what decisions you're making and why. This enables post-phase self-assessment.
+
+> If no instinct files or feedback exist yet, proceed normally — instincts will accumulate over time.
+
+---
+
 ## Prerequisites
 
 1. **PRD must exist** — `reports/PRD.md` must be present. If missing, stop and instruct
@@ -352,6 +365,28 @@ After generating all architecture artifacts, pause and request human approval of
 
 Do **not** proceed to Phase 2 until the human has reviewed and approved the ADR
 and confirmed the existing system analysis is accurate.
+
+---
+
+## Post-Phase: Self-Assessment & Learning
+
+After completing your work, perform a brief self-assessment:
+
+1. **Review your output** against your instincts — did you follow all learned patterns?
+2. **Identify decisions you made** that a reviewer might question or correct — especially integration decisions, pattern conformance vs. deviation choices, and existing system compatibility.
+3. **Note any patterns you discovered** that could become instincts for future runs.
+4. **Write a self-assessment** to `reports/feedback/phase-1B-self-assessment.md`:
+
+| Question | Your Answer |
+|----------|-------------|
+| Did I follow all instincts? | Yes / No (list any missed) |
+| What decisions might be controversial? | [list] |
+| What patterns did I discover? | [list] |
+| What would I do differently? | [list] |
+| Proposed new instincts | [list actionable instincts] |
+
+5. **Suggest instinct updates** — If you discovered patterns worth codifying, propose them for the instinct manager:
+   > Invoke `@instinct-manager` to review and add approved instincts after checkpoint feedback.
 
 ---
 

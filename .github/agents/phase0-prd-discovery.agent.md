@@ -32,6 +32,21 @@ You operate with the mindset of a senior product manager paired with a technical
 - The project is in maintenance mode with no new feature development
 - Requirements are already captured in a formal system (e.g., JIRA epics with full acceptance criteria)
 
+---
+
+## Pre-Phase: Load Instincts & Context
+
+Before beginning work, load your learned patterns:
+
+1. **Read your instincts** — Check `.github/instincts/phase0-prd-discovery.instincts.md` for learned patterns. Apply all listed instincts to your work in this phase.
+2. **Read shared instincts** — Check `.github/instincts/shared.instincts.md` for organizational patterns that apply across all phases.
+3. **Read past feedback** — Check `reports/feedback/` for any feedback files from previous runs of this phase. Pay special attention to corrections and anti-patterns.
+4. **Note your starting assumptions** — Before producing output, briefly note what decisions you're making and why. This enables post-phase self-assessment.
+
+> If no instinct files or feedback exist yet, proceed normally — instincts will accumulate over time.
+
+---
+
 ## Integration Discovery — Greenfield vs. Brownfield
 
 Before diving into requirements, determine the project type. This fundamentally shapes the PRD.
@@ -364,6 +379,30 @@ Before finalizing output, verify:
 - [ ] PRD follows the 12-section structure completely (plus 8a for brownfield projects)
 - [ ] For brownfield projects: Existing System Context section is fully populated
 - [ ] For brownfield projects: Integration Requirements user stories are included
+
+---
+
+## Post-Phase: Self-Assessment & Learning
+
+After completing your work, perform a brief self-assessment:
+
+1. **Review your output** against your instincts — did you follow all learned patterns?
+2. **Identify decisions you made** that a reviewer might question or correct — especially requirement prioritization decisions, scope boundary choices, and persona definitions.
+3. **Note any patterns you discovered** that could become instincts for future runs.
+4. **Write a self-assessment** to `reports/feedback/phase-0-self-assessment.md`:
+
+| Question | Your Answer |
+|----------|-------------|
+| Did I follow all instincts? | Yes / No (list any missed) |
+| What decisions might be controversial? | [list] |
+| What patterns did I discover? | [list] |
+| What would I do differently? | [list] |
+| Proposed new instincts | [list actionable instincts] |
+
+5. **Suggest instinct updates** — If you discovered patterns worth codifying, propose them for the instinct manager:
+   > Invoke `@instinct-manager` to review and add approved instincts after checkpoint feedback.
+
+---
 
 ## Next Steps
 
