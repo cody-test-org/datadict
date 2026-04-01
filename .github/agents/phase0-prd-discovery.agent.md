@@ -32,7 +32,7 @@ You operate with the mindset of a senior product manager paired with a technical
 - The project is in maintenance mode with no new feature development
 - Requirements are already captured in a formal system (e.g., JIRA epics with full acceptance criteria)
 
-## Integration Discovery — Greenfield vs. Bolt-On
+## Integration Discovery — Greenfield vs. Brownfield
 
 Before diving into requirements, determine the project type. This fundamentally shapes the PRD.
 
@@ -40,14 +40,14 @@ Before diving into requirements, determine the project type. This fundamentally 
 
 Ask the user (or infer from context):
 
-> **Is this a greenfield project (building from scratch) or a bolt-on to an existing system?**
+> **Is this a greenfield project (building from scratch) or a brownfield integration with an existing system?**
 
 - **Greenfield** — No existing system. Full freedom to choose tech stack, patterns, and infrastructure. Proceed with the standard discovery process below.
-- **Bolt-on** — Adding a feature or service to an existing platform (e.g., adding a Data Dictionary service to an existing API Portal). Requires integration discovery before standard requirements gathering.
+- **Brownfield** — Adding a feature or service to an existing platform (e.g., adding a Data Dictionary service to an existing API Portal). Requires integration discovery before standard requirements gathering.
 
-### Bolt-On Integration Discovery
+### Brownfield Integration Discovery
 
-If the project is a bolt-on, gather the following **before** standard requirements analysis. These become hard constraints that shape every downstream phase.
+If the project is brownfield, gather the following **before** standard requirements analysis. These become hard constraints that shape every downstream phase.
 
 1. **Existing Platform Description** — What is the system being extended? What does it do today? Who owns it?
 2. **Tech Stack of Existing System** — Languages, frameworks, versions (e.g., "React 18 frontend, Java 17 / Spring Boot 2.7 backend, PostgreSQL 14")
@@ -64,7 +64,7 @@ Capture answers in the PRD under **"Section 8a: Existing System Context"** (see 
 
 ### Impact on Downstream Discovery
 
-When the project is a bolt-on:
+When the project is brownfield:
 
 - **User Stories** — Add an **"Integration Requirements"** category alongside functional stories. These cover stories like:
   - "As a developer, I want the new Data Dictionary API to follow the portal's existing URL conventions so that consumers have a consistent experience."
@@ -233,7 +233,7 @@ Performance, security, scalability, and other quality attributes with measurable
 ## 8. Technical Constraints
 Known technology choices, platform limitations, integration requirements, and hard boundaries.
 
-## 8a. Existing System Context _(bolt-on projects only)_
+## 8a. Existing System Context _(brownfield projects only)_
 Complete this section when integrating into an existing platform. Omit for greenfield projects.
 
 ### Platform Overview
@@ -361,9 +361,9 @@ Before finalizing output, verify:
 - [ ] Out of Scope section is populated
 - [ ] Success metrics are SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
 - [ ] All personas have at least one user story
-- [ ] PRD follows the 12-section structure completely (plus 8a for bolt-on projects)
-- [ ] For bolt-on projects: Existing System Context section is fully populated
-- [ ] For bolt-on projects: Integration Requirements user stories are included
+- [ ] PRD follows the 12-section structure completely (plus 8a for brownfield projects)
+- [ ] For brownfield projects: Existing System Context section is fully populated
+- [ ] For brownfield projects: Integration Requirements user stories are included
 
 ## Next Steps
 

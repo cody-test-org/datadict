@@ -31,9 +31,9 @@ and produce actionable artifacts that Phase 2 (Code Generation) can implement di
 
 ---
 
-## Bolt-On Architecture Considerations
+## Brownfield Architecture Considerations
 
-When the PRD contains a **"Section 8a: Existing System Context"**, this is a bolt-on project
+When the PRD contains a **"Section 8a: Existing System Context"**, this is a brownfield project
 integrating into an existing system. The architecture must respect existing constraints rather
 than designing from scratch.
 
@@ -49,9 +49,9 @@ than designing from scratch.
 
 2. These become **non-negotiable constraints** for architecture decisions.
 
-### Architecture Rules for Bolt-On Projects
+### Architecture Rules for Brownfield Projects
 
-| Area | Greenfield Approach | Bolt-On Approach |
+| Area | Greenfield Approach | Brownfield Approach |
 |---|---|---|
 | **Tech stack** | Choose optimal technologies | Match existing technologies and versions |
 | **Database** | Design new schema freely | Add tables/schemas to existing database if permitted |
@@ -88,7 +88,7 @@ than designing from scratch.
 6. **Reuse shared libraries** — Identify shared modules, internal SDKs, or utility classes
    in the existing codebase that should be reused rather than reimplemented.
 
-### ADR Documentation for Bolt-On Projects
+### ADR Documentation for Brownfield Projects
 
 The ADR must explicitly document integration decisions with rationale:
 
@@ -118,8 +118,8 @@ The ADR must explicitly document integration decisions with rationale:
 
 1. Read `reports/PRD.md` in its entirety.
 2. Read `handoffs/phase-0-to-1.md` if present.
-3. **Check for Section 8a (Existing System Context)** — If present, this is a bolt-on
-   project. Apply all constraints from the Bolt-On Architecture Considerations section above.
+3. **Check for Section 8a (Existing System Context)** — If present, this is a brownfield
+   project. Apply all constraints from the Brownfield Architecture Considerations section above.
    The existing system's tech stack, database, auth, and API conventions become hard constraints.
 4. Extract and summarize:
    - **Domain entities** and their relationships.
@@ -277,7 +277,7 @@ Cover at minimum these decision areas:
 - Search strategy (tsvector + pg_trgm vs. external search engine).
 - Authentication & authorization approach (new design or integration with existing auth).
 - Module structure (single module vs. multi-module Maven).
-- **For bolt-on projects:** Integration decisions — why reuse vs. create new for each major component.
+- **For brownfield projects:** Integration decisions — why reuse vs. create new for each major component.
 
 Write the ADR to `reports/Architecture-Decision-Record.md`.
 

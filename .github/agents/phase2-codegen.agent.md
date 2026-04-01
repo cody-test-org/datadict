@@ -25,10 +25,10 @@ Before generating any code, read and internalize these Phase 1 outputs:
 
 If any required artifact is missing or incomplete, stop and report what is needed before proceeding.
 
-## Bolt-On Code Generation — Integrating with an Existing Codebase
+## Brownfield Code Generation — Integrating with an Existing Codebase
 
 When the PRD contains **Section 8a (Existing System Context)** or the ADR references
-integration with an existing system, this is a bolt-on project. Code generation must
+integration with an existing system, this is a brownfield project. Code generation must
 produce code that fits seamlessly into the existing codebase rather than imposing new
 conventions.
 
@@ -56,7 +56,7 @@ conventions.
    `com.company.portal.products`), add new features the same way
    (`com.company.portal.datadictionary`). Don't switch to layer-based packaging.
 
-### Bolt-On Code Standards
+### Brownfield Code Standards
 
 | Rule | Guidance |
 |---|---|
@@ -71,7 +71,7 @@ conventions.
 | Dependencies | Add to existing `pom.xml` — don't create a separate POM unless the project uses multi-module |
 | Tests | Follow existing test patterns (naming, structure, test utilities, base test classes) |
 
-### What NOT to Generate for Bolt-On Projects
+### What NOT to Generate for Brownfield Projects
 
 - **Do NOT generate a new `Application.java`** — one already exists
 - **Do NOT generate a new `pom.xml`** — add dependencies to the existing one

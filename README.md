@@ -141,7 +141,7 @@ Open Copilot Chat and invoke the orchestrator:
 
 The orchestrator will guide you through every phase, creating handoff documents and pausing at human checkpoints.
 
-### Option 2: Full Pipeline — Adding to an Existing System (Bolt-On)
+### Option 2: Full Pipeline — Adding to an Existing System (Brownfield)
 
 If you're integrating into an existing platform (e.g., adding a service to an existing portal):
 
